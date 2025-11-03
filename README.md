@@ -20,6 +20,10 @@ docker run --rm ghcr.io/ryanbeales/immich-export-album --immich-api-key={apikey}
 ```
 The output directory will contain all the files in the album and keep them synced. It is a one way sync, files removed from the album will remain in the output directory and removing files form the output will have them replaced.
 
+## Kubernetes
+
+For an example of running in kuberetnes, please see the manifests [here](https://github.com/ryanbeales/personal-microk8s-config/tree/main/self-hosted-services/image-album-export)
+
 ## Local Setup
 Install `uv` by following https://docs.astral.sh/uv/getting-started/installation/
 
@@ -48,5 +52,5 @@ mkdir output
 
 Run the application:
 ```
-uv run python main.py --log-config logging.yaml
+uv run python main.py
 ```
