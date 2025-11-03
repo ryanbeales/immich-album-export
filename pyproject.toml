@@ -1,0 +1,11 @@
+[project]
+name = "immich-album-export"
+version = "0.1.0"
+description = "A simple tool to export an album as files from an immich server."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic-settings>=2.11.0",
+    "pyyaml>=6.0.3",
+]
