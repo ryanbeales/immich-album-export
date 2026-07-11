@@ -11,12 +11,14 @@ class Immich():
         self.server = server
         self.httpx_client = httpx.Client(base_url=self.server, headers=self.headers)
 
-    def _make_request(self, method: str, endpoint: str):
+    def _make_request(self, method: str, endpoint: str, **kwargs):
         logger.debug(f"Request: {method}. {endpoint}")
-        response = self.httpx_client.request(method, endpoint)
-        logger.debug("Response status: {response.status_code}")
+        response = self.httpx_client.request(method, endpoint, **kwargs)
+        logger.debug(f"Response status: {response.status_code}")
         if response.status_code > 299:
-            raise Exception('Expected status 2xx, got', response.status_code)
+            if response.status_code == 403:
+                logger.error(f"403 Forbidden on {endpoint}. Make sure your API key has appropriate permissions (like asset.read).")
+            raise Exception('Expected status 2xx, got', response.status_code, response.text)
         
         return response
 
@@ -29,6 +31,10 @@ class Immich():
         assets = self._make_request("GET", f"/api/albums/{album_id}").json()
         logger.debug(f"Album assets: {assets}")
         return assets
+
+    def search_metadata(self, album_id: str):
+        response = self._make_request("POST", "/api/search/metadata", json={"albumIds": [album_id]})
+        return response.json()
 
     def get_asset_original(self, asset_id: str):
         original = self._make_request("GET", f"/api/assets/{asset_id}/original")
